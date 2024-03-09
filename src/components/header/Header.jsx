@@ -21,6 +21,27 @@ const Header = () => {
         window.scrollTo(0, 0);
     }, [location]);
 
+    const controlNavbar = () => {
+        console.log(window.scrollY);
+        if (window.scrollY > 200) {
+            if (window.scrollY > lastScrollY && !mobileMenu) {
+                setShow("hide");
+            } else {
+                setShow("show");
+            }
+        } else {
+            setShow("top");
+        }
+        setLastScrollY(window.scrollY);
+    };
+
+    useEffect(() => {
+        window.addEventListener("scroll", controlNavbar);
+        return () => {
+            window.removeEventListener("scroll", controlNavbar);
+        };
+    }, [lastScrollY]);
+
     const searchQueryHandler = (event) => {
         if (event.key === "Enter" && query.length > 0) {
             navigate(`/search/${query}`);
@@ -52,10 +73,9 @@ const Header = () => {
     return (
         <header className={`header ${mobileMenu ? "mobileView" : ""} ${show}`}>
             <ContentWrapper>
-                <div className="logo">
-                    <Img src={logo} alt="" />
+                <div className="logo" onClick={() => navigate("/")}>
+                    <img src={logo} alt="" />
                 </div>
-
                 <ul className="menuItems">
                     <li
                         className="menuItem"
@@ -101,7 +121,7 @@ const Header = () => {
                 </div>
             )}
         </header>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;

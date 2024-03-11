@@ -6,11 +6,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+
 import ContentWrapper from "../contentWrapper/ContentWrapper";
 import Img from "../lazyLoadImage/Img";
 import PosterFallback from "../../assets/no-poster.png";
 import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
+
 import "./Carousel.scss";
 
 const Carousel = ({ data, loading, endpoint, title }) => {
@@ -20,6 +22,7 @@ const Carousel = ({ data, loading, endpoint, title }) => {
 
     const navigation = (dir) => {
         const container = carouselContainer.current;
+
         const scrollAmount =
             dir === "left"
                 ? container.scrollLeft - (container.offsetWidth + 20)
@@ -46,7 +49,7 @@ const Carousel = ({ data, loading, endpoint, title }) => {
     return (
         <div className="carousel">
             <ContentWrapper>
-                {<div className="carouselTitle">{title}</div>}
+                {title && <div className="carouselTitle">{title}</div>}
                 <BsFillArrowLeftCircleFill
                     className="carouselLeftNav arrow"
                     onClick={() => navigation("left")}
@@ -66,16 +69,27 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                     key={item.id}
                                     className="carouselItem"
                                     onClick={() =>
-                                        navigate(`/${item.media_type || endpoint}/${item.id}`)
+                                        navigate(
+                                            `/${item.media_type || endpoint}/${item.id
+                                            }`
+                                        )
                                     }
                                 >
                                     <div className="posterBlock">
                                         <Img src={posterUrl} />
-                                        <CircleRating rating={item.vote_average.toFixed(1)} />
-                                        <Genres data={item.genre_ids.slice(0, 2)} />
+                                        <CircleRating
+                                            rating={item.vote_average.toFixed(
+                                                1
+                                            )}
+                                        />
+                                        <Genres
+                                            data={item.genre_ids.slice(0, 2)}
+                                        />
                                     </div>
                                     <div className="textBlock">
-                                        <span className="title">{item.title || item.name}</span>
+                                        <span className="title">
+                                            {item.title || item.name}
+                                        </span>
                                         <span className="date">
                                             {dayjs(item.release_date || item.first_air_date).format(
                                                 "MMM D, YYYY"
@@ -93,7 +107,6 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                         {skItem()}
                         {skItem()}
                         {skItem()}
-                        Loading
                     </div>
                 )}
             </ContentWrapper>
